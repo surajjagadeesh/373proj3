@@ -1,7 +1,9 @@
 package misc;
 
+import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
+import datastructures.interfaces.IPriorityQueue;
 import misc.exceptions.NotYetImplementedException;
 
 public class Searcher {
@@ -36,23 +38,28 @@ public class Searcher {
         	throw new IllegalArgumentException();
         }
         //create new heap of size k;
+        
+        IPriorityQueue<T> heap = new ArrayHeap<>();
+        
         boolean inHeap;
         while (!input.isEmpty()) {
         	T value = input.remove();
-        	inHeap = value > heap.peekMin();
+        	inHeap = value.compareTo(heap.peekMin()) > 0;
         	if (heap.size() < k) {
         		heap.insert(value);
-        	} else if (value > heap.peekMin()) {
+        	} else if (value.compareTo(heap.peekMin()) > 0) {
         		heap.insert(value);
         		heap.removeMin();
         	}
         }
         
         //create a doubly linked list
-        IList<String> sortedList = new DoubleLinkedList<>();
+        IList<T> sortedList = new DoubleLinkedList<>();
         
         while(heap.size() > 0) {
         	sortedList.add(heap.removeMin());
         }
+        
+        return sortedList;
     }
 }
