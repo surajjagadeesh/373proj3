@@ -24,8 +24,18 @@ public class TestArrayHeapFunctionality extends BaseTest {
         return new ArrayHeap<>();
     }
     
-    @Test(timeout=SECOND)
-    public <T> void assertHeapsMatch(T[] expected, IPriorityQueue<Integer> actual) {
+    public IPriorityQueue<Integer> makeBasicHeap() {
+       IPriorityQueue<Integer> heap = this.makeInstance();
+       heap.insert(1);
+       heap.insert(2);
+       heap.insert(3);
+       heap.insert(4);
+       heap.insert(5);
+       return heap;
+       
+   }
+   
+    protected <T> void assertHeapsMatch(T[] expected, IPriorityQueue<Integer> actual) {
         assertEquals(expected.length, actual.size());
         assertEquals(expected.length == 0, actual.isEmpty());
         
@@ -43,6 +53,29 @@ public class TestArrayHeapFunctionality extends BaseTest {
         }
     }
     
+    @Test(timeout=SECOND)
+    public void checkEmptyHeapsMatch() {
+    	Integer[] expected = new Integer[0];
+        IPriorityQueue<Integer> actual = this.makeInstance();       
+        this.assertHeapsMatch(expected, actual);
+    }
+    
+    @Test(timeout=SECOND)
+    public void testBasicSize() {
+    	IPriorityQueue<Integer> heap = this.makeInstance();
+    	heap.insert(3);
+    	assertEquals(1, heap.size());
+    }
+    
+    @Test(timeout=SECOND)
+    public void checkBasicHeap() {
+    	IPriorityQueue<Integer> heap = this.makeBasicHeap();
+    	Integer[] expected = new Integer[] {1, 2, 3, 4, 5};
+    	this.assertHeapsMatch(expected, heap);
+    }
+    
+    
+    /*
     @Test(timeout=SECOND)
     public void testInternalMatching() {
         //empty
@@ -81,16 +114,6 @@ public class TestArrayHeapFunctionality extends BaseTest {
         
         assertEquals(MAX, heap.size());
         this.assertHeapsMatch(expected, heap);
-    }
-    
-    @Test(timeout=SECOND)
-     public IPriorityQueue<Integer> makeBasicHeap() {
-        IPriorityQueue<Integer> heap = this.makeInstance();
-        heap.insert(1);
-        heap.insert(2);
-        heap.insert(3);
-        heap.insert(4);
-        assertEquals(heap.peekMin(), 1);
     }
     
     //check peek empty
@@ -281,5 +304,5 @@ public class TestArrayHeapFunctionality extends BaseTest {
         }
         assertEquals(heap.isEmpty(), true);
     }
-   
+   */
 }

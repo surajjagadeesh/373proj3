@@ -15,7 +15,7 @@ import java.util.Collections;
  * See spec for details on what kinds of tests this class should include.
  */
 public class TestSortingStress extends BaseTest { 
-
+	/*
     IPriorityQueue<Integer> heap = this.makeInstance();
     //AssertEquals with collections.sort
     
@@ -68,5 +68,5 @@ public class TestSortingStress extends BaseTest {
     //Test sort partially sorted
     // -- [0,1] , [1,0] [0,1,2] permutations
 
-    
+    */
 }

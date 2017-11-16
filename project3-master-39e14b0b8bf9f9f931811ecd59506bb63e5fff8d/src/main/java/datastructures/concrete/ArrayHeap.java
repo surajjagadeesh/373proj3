@@ -4,6 +4,7 @@ import datastructures.interfaces.IPriorityQueue;
 import misc.exceptions.EmptyContainerException;
 import misc.exceptions.NotYetImplementedException;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -43,38 +44,73 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     }
 
     public T removeMin() {
+    	for(int k = 0; k < heap.length; k++) {
+    		System.out.print(heap[k] + ",");
+    	}
+    	System.out.println("remove");
         if (size == 0) {
         	throw new EmptyContainerException();
         }
         T value = heap[0];
+        size--;
         if (size == 1) {
         	heap[0] = null;
-        	size--;
         	return value;
-        	
         }
-        heap[0] = heap[size - 1];
-        heap[size - 1] = null;
-        size--;
+        heap[0] = heap[size];
+        heap[size] = null;
+        for(int k = 0; k < heap.length; k++) {
+    		System.out.print(heap[k] + ",");
+    	}
+    	System.out.println("remove2");
         percolateDown(0);
+        ensureDownsize();
         return value;
     }
     
+    private void ensureCapacity() {
+    	if (size == heap.length) {
+    		System.out.print("Increases");
+    		heap = Arrays.copyOf(heap, size * 2);
+    	}
+    }
+    
+    private void ensureDownsize() {
+    	if (size <= heap.length / 4) {
+    		System.out.print("Downsizes");
+    		for(int k = 0; k < heap.length; k++) {
+        		System.out.print(heap[k] + ",");
+        	}
+    		System.out.println();
+    		heap = Arrays.copyOf(heap, heap.length / 2);
+    	}
+    }
+    
     private void percolateDown(int i) {
-    	T smallest = heap[i];
-    	int smallestIndex = i;
     	int child = (i * 4) + 1;
-    	int lastChild = (i * 4) + 5;
-    	while (child < size - 1 && child < lastChild) {
-    		if (heap[child].compareTo(smallest) < 0) {
-    			smallest = heap[child];
-    			smallestIndex = child;
-    		}
-    		child++;
+    	for(int k = 0; k < heap.length; k++) {
+    		System.out.print(heap[k] + ",");
     	}
-    	if (smallestIndex != i) {
-    		percolateDown(smallestIndex);
-    	}
+    	System.out.println("percolate");
+    	if(this.size()-1 < child) {
+    		return;
+    	} else {
+        	T smallest = heap[i];
+        	int smallestIndex = i;
+        	int lastChild = (i * 4) + 5;
+        	while (child < size && child < lastChild) {
+        		if (heap[child].compareTo(smallest) < 0) {
+        			smallest = heap[child];
+        			smallestIndex = child;
+        		}
+        		child++;
+        	}   	
+        	if (smallestIndex != i) {
+        		heap[smallestIndex] = heap[i];
+            	heap[i] = smallest;
+        		percolateDown(smallestIndex);
+        	}
+    	} 	
     }
     
     private void percolateUp(int i) {
@@ -102,6 +138,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         heap[size] = item;
         percolateUp(size);
         size++;
+        ensureCapacity();
     }
 
     @Override

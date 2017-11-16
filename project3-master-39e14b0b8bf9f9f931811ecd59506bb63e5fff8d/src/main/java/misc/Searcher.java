@@ -44,7 +44,6 @@ public class Searcher {
         boolean inHeap;
         while (!input.isEmpty()) {
         	T value = input.remove();
-        	inHeap = value.compareTo(heap.peekMin()) > 0;
         	if (heap.size() < k) {
         		heap.insert(value);
         	} else if (value.compareTo(heap.peekMin()) > 0) {
