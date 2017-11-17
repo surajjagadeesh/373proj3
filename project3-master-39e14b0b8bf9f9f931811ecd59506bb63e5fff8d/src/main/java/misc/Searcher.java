@@ -4,7 +4,6 @@ import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.IPriorityQueue;
-import misc.exceptions.NotYetImplementedException;
 
 public class Searcher {
     /**
@@ -37,11 +36,12 @@ public class Searcher {
         if (k < 0) {
         	throw new IllegalArgumentException();
         }
-        //create new heap of size k;
+        if (k == 0) {
+        	return new DoubleLinkedList<>();
+        }
         
         IPriorityQueue<T> heap = new ArrayHeap<>();
         
-        boolean inHeap;
         while (!input.isEmpty()) {
         	T value = input.remove();
         	if (heap.size() < k) {
@@ -55,7 +55,7 @@ public class Searcher {
         //create a doubly linked list
         IList<T> sortedList = new DoubleLinkedList<>();
         
-        while(heap.size() > 0) {
+        while (heap.size() > 0) {
         	sortedList.add(heap.removeMin());
         }
         

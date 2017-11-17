@@ -1,12 +1,14 @@
 package datastructures.sorting;
 
 import misc.BaseTest;
+
+import static org.junit.Assert.*;
+
+import java.util.*;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
-import datastructures.interfaces.IPriorityQueue;
 import misc.Searcher;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -16,35 +18,66 @@ import org.junit.Test;
  * See spec for details on what kinds of tests this class should include.
  */
 public class TestTopKSortFunctionality extends BaseTest {
-    /*
-	int MAX = 500000;
-    int MIN = 3000;
-    int K = 100;
-    
-    @Test(timeout=10*SECOND)
-    public <T> void assertProperlySorted(T[] expected, IPriorityQueue<Integer> actual) {
-        assertEquals(expected.length, actual.size());
-        assertEquals(expected.length == 0, actual.isEmpty());
+    private static final int MAX = 100;
+	
+    protected <T> void assertProperlySorted(List<Integer> expected, IList<Integer> actual) {
+        assertEquals(expected.size() == 0, actual.isEmpty());
+        Collections.sort(expected);
+        int diff = expected.size() - actual.size() - 1;
         
-        for(int i = 0; i < expected.length; i++) {
+        for (int i = actual.size(); i > 0; i--) {
+        	Integer value = actual.remove();
             try {
-                //!!!
-                //!!!
-                //  Need to update ILIST
-                //!!!
-                //!!!
-                
-                //assertEquals("Implemented sort does not match collections.sort(..)", Collections.sort(expected), actual);
-                
+                assertEquals(expected.get(i + diff), value);
             } catch (Exception ex){
                 String errorMessage = String.format(
                         "Got %s when getting item at index %d (expected '%s')",
                         ex.getClass().getSimpleName(),
                         i,
-                        expected[i]);
+                        value);
                 throw new AssertionError(errorMessage, ex);
             }
         }
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInOrderSort() {
+    	List<Integer> expected = new ArrayList<Integer>();
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = 0; i < MAX; i++) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	
+    	this.assertProperlySorted(expected, Searcher.topKSort(5, nums));
+    }
+    
+    @Test(timeout=SECOND)
+    public void testReverseOrderSort() {
+    	List<Integer> expected = new ArrayList<Integer>();
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = MAX; i > 0; i--) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	
+    	this.assertProperlySorted(expected, Searcher.topKSort(5, nums));
+    }
+    
+    @Test(timeout=SECOND)
+    public void testHalfSortedSort() {
+    	List<Integer> expected = new ArrayList<Integer>();
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = MAX; i > 50; i--) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	for (int i = 0; i < 51; i++) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	
+    	this.assertProperlySorted(expected, Searcher.topKSort(5, nums));
     }
     
     @Test(timeout=SECOND)
@@ -61,130 +94,87 @@ public class TestTopKSortFunctionality extends BaseTest {
         }
     }
     
-    private int generatRandPositiveNegitiveNum(int max , int min) {
-        Random rand = new Random();
-        int n = -min + (int) (Math.random() * ((max - (-min)) + 1));
-        return n;
+    @Test(timeout=SECOND)
+    public void testNegativeNumbers() {
+    	List<Integer> expected = new ArrayList<>();
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = MAX; i > 50; i--) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	for (int i = 0; i < 51; i++) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	
+    	this.assertProperlySorted(expected, Searcher.topKSort(5, nums));
     }
     
-    //index < n/2 negative
-    //index > n/2 postive
-    private IList<Integer> makeSortedList(int n) {
-        IList<Integer> list = new DoubleLinkedList<>();
-        int orgin = (int)Math.floor(Math.random()) * MAX/2;
-        orgin = -1*orgin;
-        while (n > 0) {
-            list.add(orgin);
-            orgin++;
-            n--;
-        }
-        assertEquals(list.size(), n);
-        return list;
+    @Test(timeout=SECOND)
+    public void testKMoreThanSize() {
+    	List<Integer> expected = new ArrayList<Integer>();
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = MAX; i > 0; i--) {
+    		expected.add(i);
+    		nums.add(i);
+    	}
+    	
+    	this.assertProperlySorted(expected, Searcher.topKSort(nums.size()+5, nums));
     }
     
-    private IList<Integer> makeRandomList(int n) {
-        IList<Integer> list = new DoubleLinkedList<>();
-        for (int i = 0; i < n; i++) {
-            int num = (int) Math.floor(Math.random()*MAX);
-            
-            list.add(generatRandomPositiveNegitiveValue(-1*(MAX/2), (MAX/2) ));
-        }
-        return list;
+    @Test(timeout=SECOND)
+    public void testKisZero() {
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	for (int i = MAX; i > 0; i--) {
+    		nums.add(i);
+    	}
+    	
+    	IList<Integer> actual = Searcher.topKSort(0, nums);
+    	assertTrue(actual.isEmpty());
     }
     
-    private IList<Integer> makeReversedSortedList(int n) {
-        IList<Integer> list = new DoubleLinkedList<>();
-        for (int i = n; i > 0; i--) {
-            list.add(i);
-        }
-        return list;
+    @Test(timeout=SECOND)
+    public void testSortEmptyList() {
+    	IList<Integer> actual = Searcher.topKSort(5, new DoubleLinkedList<>());
+    	assertTrue(actual.isEmpty());
     }
     
-    @Test(Timeout=SECOND)
-   public void testSortSmall() {
-        IList<Integer> list = makeSortedList(10);
-        //assertEquals(Searcher.topKSort(5, list), Collections.sort(list));
-        //assertEquals(Searcher.topKSort(15, list), Collections.sort(list));
-
-    }    
-    
-    
-    @Test(Timeout=SECOND)
-   public void testSortLarge() {
-        IList<Integer> list = makeSortedList(MAX);
-        
-        //List for comparison
-        IList<Integer> expected = new DoubleLinkedList<Integer>();
-        for (int i = 0; i < K; i++) {
-            expected.add(list.get(i));
-        }
-        //expected = Collections.sort(expected);
-        
-        //Get Many K-Sorted
-        for (int i = 0; i < MAX/2; i++) {
-            IList<Integer> top = Searcher.topKSort(K, list);
-            //assertProperlySorted(top, expected);
-        }
+    @Test(timeout=SECOND)
+    public void testSortListWithOneElement() {
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	nums.add(0);
+    	
+    	List<Integer> expected = new ArrayList<Integer>();
+    	expected.add(0);
+    	this.assertProperlySorted(expected, Searcher.topKSort(5, nums));	
     }
     
-  @Test(Timeout=SECOND)
-  public void testKLargerThanSize() {
-      IList<Integer> list = makeSortedList(MAX/3);
-      IList<Integer> top = Searcher.topKSort(MAX, list);
-      //assertProperlySorted(top, Collections.sort(list);
-      
-      list = makeReversedSortedList(MAX/3);
-      top = Searcher.topKSort(MAX, list);
-      //assertProperlySorted(top, Collections.sort(list);
-      
-      list = makeRandomList(MAX/3);
-      top = Searcher.topKSort(MAX, list);
-      //assertProperlySorted(top, Collections.sort(list);
-  }
-  
-  @Test(Timeout=SECOND)
-  public void testKSmallerThanSize() {
-      IList<Integer> list = makeSortedList(MAX);
-      IList<Integer> top = Searcher.topKSort(MAX/2, list);
-      //assertProperlySorted(top, Collections.sort(Arrays.copyOfRange(list, 0, MAX/2));
-  }
-  
-  @Test(Timeout = SECOND)
-  public void testRandomK() {
-      for (int i = 0; i < MIN; i++) {
-          IList<Integer> list = makeSortedList(MIN);
-          int rand = (int)Math.random() * MIN;
-          IList<Integer> top = Searcher.topKSort(rand, list);
-          //assertProperlySorted(top, Collections.sort(Arrays.copyOfRange(list, 0, rand));
-      }
-  }
+    @Test(timeout=SECOND)
+    public void testDuplicateLists() {
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	List<Integer> expected = new ArrayList<Integer>();
+    	
+    	for (int i = 0; i < MAX; i++) {
+    		nums.add(0);
+    		expected.add(0);
+    	}
+    	for (int i = 0; i < MAX; i++) {
+    		nums.add(1);
+    		expected.add(1);
+    	}
+    	this.assertProperlySorted(expected, Searcher.topKSort(MAX * 2, nums));
+    }
     
-  @Test(Timeout = SECOND) {
-  public void testFrontIsSmallest() {
-      IList<Integer> list = Searcher.topKSort(K,makeRandomList(MAX));
-      int n = list.get(0);
-      boolean isTrue = true;
-      for (int i = 1; i < list.size(); i++) {
-          if (list.get(i) < n) {
-              isTrue = false;
-              break;
-          }
-      }
-      assertEquals(isTrue, true);
-  }
-  
-  @Test(Timeout = SECOND) {
-  public void testLastIsLargest() {
-      IList<Integer> list = Searcher.topKSort(K,makeRandomList(MAX));
-      int n = list.get(list.size() - 1);
-      boolean isTrue = true;
-      for (int i = 1; i < list.size(); i++) {
-          if (list.get(i) > n) {
-              isTrue = false;
-              break;
-          }
-      }
-      assertEquals(isTrue, true);
-  }
-  */
+    @Test(timeout=SECOND)
+    public void testRandomNumbers() {
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	List<Integer> expected = new ArrayList<Integer>();
+    	Random r = new Random();
+    	for (int i = 0; i < MAX; i++) {
+    		int value = r.nextInt(100) - 50;
+    		nums.add(value);
+    		expected.add(value);
+    	}
+    	this.assertProperlySorted(expected, Searcher.topKSort(10, nums));
+    }
 }
