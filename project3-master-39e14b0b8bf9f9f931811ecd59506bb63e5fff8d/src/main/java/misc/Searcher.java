@@ -43,9 +43,8 @@ public class Searcher {
         }
         
         IPriorityQueue<T> heap = new ArrayHeap<>();
-        
-        while (!input.isEmpty()) {
-        	T value = input.remove();
+
+        for (T value : input) {
         	if (heap.size() < k) {
         		heap.insert(value);
         	} else if (value.compareTo(heap.peekMin()) > 0) {

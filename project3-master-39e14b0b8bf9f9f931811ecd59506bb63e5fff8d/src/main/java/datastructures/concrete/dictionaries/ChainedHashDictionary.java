@@ -19,7 +19,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     // it using our private tests.
     private IDictionary<K, V>[] chains;
     private int numPairs;
-    private static final double LOAD_FACTOR = 0.75;
+    private static final double LOAD_FACTOR = 5;
 
     // You're encouraged to add extra fields (and helper methods) though!
 

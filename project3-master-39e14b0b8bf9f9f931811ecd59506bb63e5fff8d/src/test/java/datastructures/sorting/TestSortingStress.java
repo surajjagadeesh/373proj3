@@ -65,7 +65,7 @@ public class TestSortingStress extends BaseTest {
         }
     }
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testStressInsertHeap() {
 		IPriorityQueue<Integer> heap = this.makeInstance();
 		for (int i = MAX; i > 0; i--) {
@@ -74,6 +74,7 @@ public class TestSortingStress extends BaseTest {
 		}
 	}
 	
+	@Test(timeout=4* SECOND)
 	public void testInsertAndPeek() {
 		IPriorityQueue<Integer> heap = this.makeInstance();
 		for (int i = MAX; i > 0; i--) {
@@ -83,7 +84,7 @@ public class TestSortingStress extends BaseTest {
 		}
 	}
 	
-	@Test(timeout=2* SECOND)
+	@Test(timeout=8* SECOND)
     public void alternatingInsertAndRemove() {
     	IPriorityQueue<Integer> heap = this.makeInstance();
     	Integer[] expected = new Integer[MAX];
@@ -98,7 +99,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertHeapsMatch(expected, heap);
     }
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void insertDuplicates() {
 		IPriorityQueue<Integer> heap = this.makeInstance();
 		Integer[] expected = new Integer[MAX];
@@ -110,7 +111,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertHeapsMatch(expected, heap);
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testSortSorted() {
 		List<Integer> expected = new ArrayList<Integer>();
     	IList<Integer> nums = new DoubleLinkedList<>();
@@ -122,7 +123,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertProperlySorted(expected, Searcher.topKSort(MAX / 2, nums));
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testSortReverseSorted() {
 		List<Integer> expected = new ArrayList<Integer>();
     	IList<Integer> nums = new DoubleLinkedList<>();
@@ -134,7 +135,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertProperlySorted(expected, Searcher.topKSort(MAX / 2, nums));
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testSortHalfSorted() {
 		List<Integer> expected = new ArrayList<Integer>();
     	IList<Integer> nums = new DoubleLinkedList<>();
@@ -150,7 +151,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertProperlySorted(expected, Searcher.topKSort(MAX / 2, nums));
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testStressDuplicates() {
 		List<Integer> expected = new ArrayList<Integer>();
     	IList<Integer> nums = new DoubleLinkedList<>();
@@ -165,7 +166,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertProperlySorted(expected, Searcher.topKSort(MAX, nums));
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testSortRandom() {
 		IList<Integer> nums = new DoubleLinkedList<>();
     	List<Integer> expected = new ArrayList<Integer>();
@@ -178,7 +179,7 @@ public class TestSortingStress extends BaseTest {
     	this.assertProperlySorted(expected, Searcher.topKSort(MAX/2, nums));
 	}
 	
-	@Test(timeout=SECOND)
+	@Test(timeout=4* SECOND)
 	public void testPartiallySorted() {
 		List<Integer> expected = new ArrayList<Integer>();
     	IList<Integer> nums = new DoubleLinkedList<>();

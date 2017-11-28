@@ -4,14 +4,16 @@ package datastructures.sorting;
 
 import misc.BaseTest;
 
-import static org.junit.Assert.*;
-
-import java.util.*;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
 import misc.Searcher;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
@@ -178,5 +180,24 @@ public class TestTopKSortFunctionality extends BaseTest {
     		expected.add(value);
     	}
     	this.assertProperlySorted(expected, Searcher.topKSort(10, nums));
+    }
+    
+    @Test(timeout=SECOND)
+    public void testKNegativeThrowsException() {
+    	IList<Integer> nums = new DoubleLinkedList<>();
+    	List<Integer> expected = new ArrayList<Integer>();
+    	Random r = new Random();
+    	for (int i = 0; i < MAX; i++) {
+    		int value = r.nextInt(100) - 50;
+    		nums.add(value);
+    		expected.add(value);
+    	}
+        try {
+        	this.assertProperlySorted(expected, Searcher.topKSort(-5, nums));
+            // We didn't throw an exception? Fail now.
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+            // Do nothing: this is ok
+        }
     }
 }
